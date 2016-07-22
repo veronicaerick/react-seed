@@ -20422,52 +20422,108 @@ process.umask = function() { return 0; };
 
 },{}],172:[function(require,module,exports){
 var React = require('react');
-var ListItem = require('./ListItem.jsx');
+var NavItem = require('./NavItem.jsx');
 
-var ingredients = [{ "id": 1, "text": "ham" }, { "id": 2, "text": "cheese" }, { "id": 3, "text": "potatoes" }];
-
-var List = React.createClass({
-  displayName: 'List',
+var NavBar = React.createClass({
+  displayName: 'NavBar',
 
   render: function () {
-    var listItems = ingredients.map(function (item) {
-      return React.createElement(ListItem, { key: item.id, ingredients: item.text });
-    });
+
+    var navStyle = {
+      WebkitBoxShadow: "0 0 4px rgba(0,0,0,0.4)",
+      MozBoxShadow: "0 0 4px rgba(0,0,0,0.4)",
+      boxShadow: "0 0 4px rgba(0,0,0,0.4)",
+      borderRadius: 0
+    };
+
+    var titleStyle = {};
+    var linkStyle = {};
+
+    if (this.props.bgColor) navStyle.background = this.props.bgColor;
+
+    if (this.props.titleColor) titleStyle.color = this.props.titleColor;
+
+    if (this.props.linkColor) linkStyle.color = this.props.linkColor;
+
+    var createLinkItem = function (item, index) {
+      return React.createElement(NavItem, { aStyle: linkStyle, key: item.title + index, href: item.href, title: item.title });
+    };
+
     return React.createElement(
-      'ul',
+      'div',
       null,
-      listItems
+      React.createElement(
+        'nav',
+        { style: navStyle, className: 'navbar navbar-default' },
+        React.createElement(
+          'div',
+          { className: 'navbar-header' },
+          React.createElement(
+            'button',
+            { type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#nav-collapse' },
+            React.createElement('span', { className: 'icon-bar' }),
+            React.createElement('span', { className: 'icon-bar' }),
+            React.createElement('span', { className: 'icon-bar' })
+          ),
+          React.createElement(
+            'a',
+            { style: titleStyle, className: 'navbar-brand', href: '#' },
+            'Product Shop'
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'collapse navbar-collapse', id: 'nav-collapse' },
+          React.createElement(
+            'ul',
+            { className: 'nav navbar-nav' },
+            this.props.navData.map(createLinkItem)
+          )
+        )
+      )
     );
   }
 });
 
-module.exports = List;
+module.exports = NavBar;
 
-},{"./ListItem.jsx":173,"react":170}],173:[function(require,module,exports){
+},{"./NavItem.jsx":173,"react":170}],173:[function(require,module,exports){
 var React = require('react');
-var ListItem = React.createClass({
-  displayName: 'ListItem',
+
+var NavItem = React.createClass({
+  displayName: 'NavItem',
 
   render: function () {
     return React.createElement(
       'li',
       null,
       React.createElement(
-        'h4',
-        null,
-        this.props.ingredients
+        'a',
+        { style: this.props.aStyle, href: this.props.href },
+        this.props.title
       )
     );
   }
 });
 
-module.exports = ListItem;
+module.exports = NavItem;
 
 },{"react":170}],174:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
-var List = require('./components/List.jsx');
+var NavBar = require('./components/nav/NavBar.jsx');
 
-ReactDOM.render(React.createElement(List, null), document.getElementById('ingredients'));
+var NavLinks = [{
+  title: "Home",
+  href: "#"
+}, {
+  title: "About Me",
+  href: "#"
+}, {
+  title: "Contact",
+  href: "#"
+}];
 
-},{"./components/List.jsx":172,"react":170,"react-dom":1}]},{},[174]);
+ReactDOM.render(React.createElement(NavBar, { bgColor: 'blue', titleColor: 'white', linkColor: 'pink', navData: NavLinks }), document.getElementById('nav'));
+
+},{"./components/nav/NavBar.jsx":172,"react":170,"react-dom":1}]},{},[174]);
